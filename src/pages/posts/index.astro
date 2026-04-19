@@ -1,0 +1,81 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostMeta from '../../components/PostMeta.astro';
+import { getCollection } from 'astro:content';
+import { readingTime } from '../../lib/reading-time';
+import { yearOf } from '../../lib/format';
+
+const isProd = import.meta.env.PROD;
+const posts = (await getCollection('posts'))
+  .filter((p) => !isProd || !p.data.draft)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const byYear = new Map<number, typeof posts>();
+for (const post of posts) {
+  const y = yearOf(post.data.pubDate);
+  if (!byYear.has(y)) byYear.set(y, []);
+  byYear.get(y)!.push(post);
+}
+const years = [...byYear.keys()].sort((a, b) => b - a);
+---
+
+<BaseLayout title="文章归档" description="全部文章按年份排列">
+  <div class="mx-auto max-w-3xl px-5 md:px-8 py-14 md:py-20">
+    <header class="mb-12 pb-8 border-b border-[var(--border)]">
+      <p class="text-xs uppercase tracking-[0.25em] text-[var(--fg-muted)] mb-3">
+        · Archive ·
+      </p>
+      <h1 class="font-serif text-3xl md:text-4xl font-semibold tracking-tight text-[var(--fg)]">
+        文字存档
+      </h1>
+      <p class="mt-4 text-[var(--fg-muted)]">
+        共 {posts.length} 篇文章，按发布时间倒序排列。
+      </p>
+    </header>
+
+    {
+      posts.length === 0 ? (
+        <p class="py-8 text-center text-[var(--fg-muted)]">暂无文章。</p>
+      ) : (
+        years.map((year) => (
+          <section class="mb-14">
+            <div class="flex items-baseline gap-4 mb-5">
+              <h2 class="font-serif text-2xl font-semibold text-[var(--fg)] tabular-nums">
+                {year}
+              </h2>
+              <span class="text-xs text-[var(--fg-muted)]">
+                {byYear.get(year)!.length} 篇
+              </span>
+              <span class="flex-1 h-px bg-[var(--border)]" aria-hidden="true" />
+            </div>
+            <ul class="divide-y divide-[var(--border)]">
+              {byYear.get(year)!.map((post) => {
+                const rt = readingTime(post.body ?? '');
+                return (
+                  <li class="group py-4">
+                    <a href={`/posts/${post.id}`} class="block">
+                      <PostMeta
+                        pubDate={post.data.pubDate}
+                        readingTime={rt.label}
+                        tags={post.data.tags}
+                        compact
+                      />
+                      <h3 class="mt-1.5 font-serif text-lg md:text-xl font-medium leading-snug text-[var(--fg)] group-hover:text-[var(--accent)] transition-colors">
+                        {post.data.title}
+                      </h3>
+                      {post.data.description && (
+                        <p class="mt-1.5 text-sm text-[var(--fg-muted)] line-clamp-1">
+                          {post.data.description}
+                        </p>
+                      )}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        ))
+      )
+    }
+  </div>
+</BaseLayout>

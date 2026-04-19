@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="页面未找到" description="404 Not Found">
+  <div class="mx-auto max-w-3xl px-5 md:px-8 py-24 md:py-32 text-center">
+    <p class="font-mono text-sm uppercase tracking-[0.3em] text-[var(--fg-muted)]">404</p>
+    <h1 class="mt-6 font-serif text-4xl md:text-5xl font-semibold tracking-tight text-[var(--fg)]">
+      这里没有东西
+    </h1>
+    <p class="mt-6 text-[var(--fg-muted)] max-w-md mx-auto">
+      你要找的页面不在这里，可能已经被移走或从来没有存在过。
+    </p>
+    <div class="mt-10 flex items-center justify-center gap-6 text-sm">
+      <a href="/" class="hover:text-[var(--accent)] transition-colors">← 回首页</a>
+      <a href="/posts" class="hover:text-[var(--accent)] transition-colors">文章列表</a>
+    </div>
+  </div>
+</BaseLayout>

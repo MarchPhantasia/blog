@@ -1,0 +1,22 @@
+---
+interface Props {
+  tag: string;
+  size?: 'sm' | 'md';
+}
+
+const { tag, size = 'sm' } = Astro.props;
+const cls =
+  size === 'sm'
+    ? 'text-xs px-1.5 py-0.5'
+    : 'text-sm px-2 py-1';
+---
+
+<a
+  href={`/tags/${tag}`}
+  class:list={[
+    'inline-block font-mono text-[var(--fg-muted)] hover:text-[var(--accent)] transition-colors',
+    cls,
+  ]}
+>
+  #{tag}
+</a>

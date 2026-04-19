@@ -1,0 +1,41 @@
+---
+import { SITE } from '../config/site';
+import ThemeToggle from './ThemeToggle.astro';
+
+const pathname = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(href + '/');
+---
+
+<header class="border-b border-[var(--border)]">
+  <div class="mx-auto max-w-3xl px-5 md:px-8 flex items-center justify-between h-16">
+    <a href="/" class="group flex items-baseline gap-2" aria-label={SITE.name}>
+      <span class="font-serif text-lg font-semibold tracking-tight group-hover:text-[var(--accent)] transition-colors">
+        {SITE.name}
+      </span>
+      <span class="text-xs text-[var(--fg-muted)] tracking-widest uppercase hidden sm:inline">
+        {SITE.nameEn}
+      </span>
+    </a>
+
+    <nav class="flex items-center gap-1 text-sm">
+      {
+        SITE.nav.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              'px-2.5 py-1.5 rounded-md transition-colors',
+              isActive(item.href)
+                ? 'text-[var(--accent)]'
+                : 'text-[var(--fg-muted)] hover:text-[var(--fg)]',
+            ]}
+          >
+            {item.zh}
+          </a>
+        ))
+      }
+      <span class="mx-1 h-4 w-px bg-[var(--border)]" aria-hidden="true"></span>
+      <ThemeToggle />
+    </nav>
+  </div>
+</header>

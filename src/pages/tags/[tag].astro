@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostMeta from '../../components/PostMeta.astro';
+import { getCollection } from 'astro:content';
+import { readingTime } from '../../lib/reading-time';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getCollection('posts', (p) => !p.data.draft);
+  const tagSet = new Set<string>();
+  for (const p of posts) for (const t of p.data.tags) tagSet.add(t);
+  return [...tagSet].map((tag) => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: posts
+        .filter((p) => p.data.tags.includes(tag))
+        .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()),
+    },
+  }));
+};
+
+const { tag, posts } = Astro.props;
+---
+
+<BaseLayout title={`标签：${tag}`} description={`关于 ${tag} 的所有文章`}>
+  <div class="mx-auto max-w-3xl px-5 md:px-8 py-14 md:py-20">
+    <header class="mb-12 pb-8 border-b border-[var(--border)]">
+      <p class="text-xs uppercase tracking-[0.25em] text-[var(--fg-muted)] mb-3">
+        · Tag ·
+      </p>
+      <h1 class="font-serif text-3xl md:text-4xl font-semibold tracking-tight text-[var(--fg)]">
+        <span class="text-[var(--fg-muted)] font-mono font-normal">#</span>{tag}
+      </h1>
+      <p class="mt-4 text-[var(--fg-muted)]">
+        共 {posts.length} 篇。<a href="/tags" class="hover:text-[var(--accent)] transition-colors">← 返回全部标签</a>
+      </p>
+    </header>
+
+    <ul class="divide-y divide-[var(--border)]">
+      {
+        posts.map((post) => {
+          const rt = readingTime(post.body ?? '');
+          return (
+            <li class="group py-4">
+              <a href={`/posts/${post.id}`} class="block">
+                <PostMeta
+                  pubDate={post.data.pubDate}
+                  readingTime={rt.label}
+                  tags={post.data.tags}
+                  compact
+                />
+                <h3 class="mt-1.5 font-serif text-lg md:text-xl font-medium leading-snug text-[var(--fg)] group-hover:text-[var(--accent)] transition-colors">
+                  {post.data.title}
+                </h3>
+                {post.data.description && (
+                  <p class="mt-1.5 text-sm text-[var(--fg-muted)] line-clamp-1">
+                    {post.data.description}
+                  </p>
+                )}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</BaseLayout>

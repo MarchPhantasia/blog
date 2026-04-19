@@ -1,0 +1,27 @@
+---
+interface Props {
+  zh: string;
+  en: string;
+  href?: string;
+  viewAllLabel?: string;
+}
+
+const { zh, en, href, viewAllLabel = '查看全部' } = Astro.props;
+---
+
+<div class="flex items-baseline justify-between border-b border-[var(--border)] pb-3">
+  <h2 class="flex items-baseline gap-3">
+    <span class="font-serif text-xl font-semibold text-[var(--fg)]">{zh}</span>
+    <span class="text-xs uppercase tracking-[0.2em] text-[var(--fg-muted)]">· {en}</span>
+  </h2>
+  {
+    href && (
+      <a
+        href={href}
+        class="text-sm text-[var(--fg-muted)] hover:text-[var(--accent)] transition-colors"
+      >
+        {viewAllLabel} →
+      </a>
+    )
+  }
+</div>

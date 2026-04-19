@@ -1,0 +1,35 @@
+---
+import { SITE } from '../config/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-[var(--border)] mt-20">
+  <div class="mx-auto max-w-3xl px-5 md:px-8 py-10 text-sm text-[var(--fg-muted)]">
+    <div class="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+      <div>
+        <p class="font-serif text-base text-[var(--fg)]">写作、阅读与长期表达。</p>
+        <p class="mt-1">这不是信息流入口，而是一座持续整理中的个人内容站。</p>
+      </div>
+      <nav aria-label="社交链接" class="flex items-center gap-4">
+        {
+          SITE.social.map((s) => (
+            <a
+              href={s.href}
+              target={s.href.startsWith('http') ? '_blank' : undefined}
+              rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+              class="hover:text-[var(--accent)] transition-colors"
+            >
+              {s.name}
+            </a>
+          ))
+        }
+      </nav>
+    </div>
+    <hr class="my-6 border-0 border-t border-[var(--border)]" />
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <span>© {year} {SITE.author}</span>
+      <span class="font-serif italic">Kept with restraint.</span>
+    </div>
+  </div>
+</footer>

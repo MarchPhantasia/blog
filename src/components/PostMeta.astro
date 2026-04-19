@@ -1,0 +1,32 @@
+---
+import { formatDateShort, isoDate } from '../lib/format';
+
+interface Props {
+  pubDate: Date;
+  readingTime?: string;
+  tags?: readonly string[];
+  compact?: boolean;
+}
+
+const { pubDate, readingTime, tags = [], compact = false } = Astro.props;
+---
+
+<div class:list={['flex flex-wrap items-center gap-x-3 gap-y-1 text-[var(--fg-muted)]', compact ? 'text-xs' : 'text-sm']}>
+  <time datetime={isoDate(pubDate)} class="font-mono tabular-nums">{formatDateShort(pubDate)}</time>
+  {readingTime ? (
+    <Fragment>
+      <span class="opacity-60">·</span>
+      <span>{readingTime}</span>
+    </Fragment>
+  ) : null}
+  {tags.length > 0 ? (
+    <Fragment>
+      <span class="opacity-60">·</span>
+      <span class="flex flex-wrap gap-1.5 font-mono">
+        {tags.map((t) => (
+          <a href={`/tags/${t}`} class="hover:text-[var(--accent)] transition-colors">#{t}</a>
+        ))}
+      </span>
+    </Fragment>
+  ) : null}
+</div>

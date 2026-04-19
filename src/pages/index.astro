@@ -1,17 +1,56 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+import SectionTitle from '../components/SectionTitle.astro';
+import { SITE } from '../config/site';
+import { getCollection } from 'astro:content';
 
+const isProd = import.meta.env.PROD;
+const posts = (await getCollection('posts'))
+  .filter((p) => !isProd || !p.data.draft)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const recent = posts.slice(0, 5);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout>
+  <div class="mx-auto max-w-3xl px-5 md:px-8">
+    <section class="pt-16 md:pt-24 pb-12 md:pb-20">
+      <p class="text-xs uppercase tracking-[0.25em] text-[var(--fg-muted)] mb-5">
+        · {SITE.nameEn} ·
+      </p>
+      <h1 class="font-serif text-4xl md:text-5xl font-semibold leading-tight tracking-tight text-[var(--fg)]">
+        {SITE.slogan}
+      </h1>
+      <p class="mt-6 text-lg text-[var(--fg-muted)] leading-relaxed max-w-[52ch]">
+        {SITE.bio}
+      </p>
+      <div class="mt-8 flex items-center gap-6 text-sm">
+        <a
+          href="/posts"
+          class="inline-flex items-center gap-1 font-medium text-[var(--fg)] hover:text-[var(--accent)] transition-colors"
+        >
+          进入文章 <span aria-hidden="true">→</span>
+        </a>
+        <a
+          href="/about"
+          class="text-[var(--fg-muted)] hover:text-[var(--accent)] transition-colors"
+        >
+          关于
+        </a>
+      </div>
+    </section>
+
+    <section class="pb-20">
+      <SectionTitle zh="近期博文" en="Recent Writing" href="/posts" />
+      <div>
+        {recent.map((post) => <PostCard post={post} />)}
+        {
+          recent.length === 0 && (
+            <p class="py-8 text-center text-[var(--fg-muted)]">暂无文章。</p>
+          )
+        }
+      </div>
+    </section>
+  </div>
+</BaseLayout>

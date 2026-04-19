@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const isProd = import.meta.env.PROD;
+const posts = (await getCollection('posts')).filter((p) => !isProd || !p.data.draft);
+
+const counts = new Map<string, number>();
+for (const p of posts) {
+  for (const t of p.data.tags) counts.set(t, (counts.get(t) ?? 0) + 1);
+}
+const tags = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+const max = Math.max(1, ...tags.map(([, n]) => n));
+---
+
+<BaseLayout title="标签" description="按主题浏览文章">
+  <div class="mx-auto max-w-3xl px-5 md:px-8 py-14 md:py-20">
+    <header class="mb-12 pb-8 border-b border-[var(--border)]">
+      <p class="text-xs uppercase tracking-[0.25em] text-[var(--fg-muted)] mb-3">· Tags ·</p>
+      <h1 class="font-serif text-3xl md:text-4xl font-semibold tracking-tight text-[var(--fg)]">
+        主题索引
+      </h1>
+      <p class="mt-4 text-[var(--fg-muted)]">
+        共 {tags.length} 个标签，覆盖 {posts.length} 篇文章。
+      </p>
+    </header>
+
+    {
+      tags.length === 0 ? (
+        <p class="py-8 text-center text-[var(--fg-muted)]">暂无标签。</p>
+      ) : (
+        <ul class="flex flex-wrap gap-x-6 gap-y-3 font-mono">
+          {tags.map(([tag, n]) => {
+            const scale = 0.9 + (n / max) * 0.6;
+            return (
+              <li>
+                <a
+                  href={`/tags/${tag}`}
+                  class="group inline-flex items-baseline gap-1.5 text-[var(--fg)] hover:text-[var(--accent)] transition-colors"
+                  style={`font-size: ${scale}rem;`}
+                >
+                  <span class="text-[var(--fg-muted)] group-hover:text-[var(--accent)]">#</span>
+                  <span>{tag}</span>
+                  <span class="text-xs text-[var(--fg-muted)] tabular-nums">{n}</span>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      )
+    }
+  </div>
+</BaseLayout>

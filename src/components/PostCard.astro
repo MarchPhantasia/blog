@@ -1,0 +1,29 @@
+---
+import PostMeta from './PostMeta.astro';
+import { readingTime } from '../lib/reading-time';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+}
+
+const { post } = Astro.props;
+const href = `/posts/${post.id}`;
+const rt = readingTime(post.body ?? '');
+---
+
+<article class="group py-5 border-b border-[var(--border)] last:border-0">
+  <a href={href} class="block">
+    <PostMeta pubDate={post.data.pubDate} readingTime={rt.label} tags={post.data.tags} compact />
+    <h3 class="mt-2 font-serif text-xl md:text-[1.4rem] font-semibold text-[var(--fg)] leading-snug group-hover:text-[var(--accent)] transition-colors">
+      {post.data.title}
+    </h3>
+    {
+      post.data.description && (
+        <p class="mt-2 text-[var(--fg-muted)] leading-relaxed line-clamp-2">
+          {post.data.description}
+        </p>
+      )
+    }
+  </a>
+</article>

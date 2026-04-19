@@ -1,0 +1,86 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import PostMeta from '../components/PostMeta.astro';
+import { readingTime } from '../lib/reading-time';
+import { formatDate } from '../lib/format';
+import type { CollectionEntry } from 'astro:content';
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  headings: MarkdownHeading[];
+}
+
+const { post, headings } = Astro.props;
+const rt = readingTime(post.body ?? '');
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  pubDate={post.data.pubDate}
+  type="article"
+>
+  <div class="mx-auto max-w-3xl px-5 md:px-8 py-10 md:py-16">
+    <header class="pb-8 mb-10 border-b border-[var(--border)]">
+      <PostMeta
+        pubDate={post.data.pubDate}
+        readingTime={rt.label}
+        tags={post.data.tags}
+      />
+      <h1 class="mt-4 font-serif text-3xl md:text-4xl font-semibold leading-tight tracking-tight text-[var(--fg)]">
+        {post.data.title}
+      </h1>
+      {
+        post.data.description && (
+          <p class="mt-4 text-lg text-[var(--fg-muted)] leading-relaxed">
+            {post.data.description}
+          </p>
+        )
+      }
+    </header>
+
+    <div class="md:grid md:grid-cols-[1fr_12rem] md:gap-10">
+      <article class="prose prose-ink dark:prose-invert max-w-none">
+        <slot />
+      </article>
+
+      {
+        toc.length > 0 && (
+          <aside class="hidden md:block">
+            <nav class="sticky top-8 text-sm" aria-label="目录">
+              <p class="text-xs uppercase tracking-[0.2em] text-[var(--fg-muted)] mb-3">
+                目录 · TOC
+              </p>
+              <ul class="space-y-2 border-l border-[var(--border)]">
+                {toc.map((h) => (
+                  <li class:list={[h.depth === 3 ? 'pl-6' : 'pl-3']}>
+                    <a
+                      href={`#${h.slug}`}
+                      class="block -ml-px pl-3 border-l border-transparent text-[var(--fg-muted)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-colors leading-snug"
+                    >
+                      {h.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </aside>
+        )
+      }
+    </div>
+
+    <footer class="mt-16 pt-8 border-t border-[var(--border)] text-sm text-[var(--fg-muted)]">
+      <p>
+        <span class="font-serif text-base text-[var(--fg)]">— 写于 {formatDate(post.data.pubDate)}</span>
+        {post.data.updatedDate && (
+          <span class="ml-3">（{formatDate(post.data.updatedDate)} 更新）</span>
+        )}
+      </p>
+      <p class="mt-4">
+        <a href="/posts" class="hover:text-[var(--accent)] transition-colors">← 回到文章列表</a>
+      </p>
+    </footer>
+  </div>
+</BaseLayout>

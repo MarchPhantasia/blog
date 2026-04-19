@@ -1,0 +1,50 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Prose from '../components/Prose.astro';
+import { SITE } from '../config/site';
+---
+
+<BaseLayout title="关于" description={`关于 ${SITE.name}`}>
+  <div class="mx-auto max-w-3xl px-5 md:px-8 py-14 md:py-20">
+    <header class="mb-10 pb-8 border-b border-[var(--border)]">
+      <p class="text-xs uppercase tracking-[0.25em] text-[var(--fg-muted)] mb-3">
+        · About ·
+      </p>
+      <h1 class="font-serif text-3xl md:text-4xl font-semibold tracking-tight text-[var(--fg)]">
+        关于
+      </h1>
+    </header>
+    <Prose>
+      <p>
+        这里是 <strong>{SITE.name} · {SITE.nameEn}</strong>，由
+        <a href={SITE.social[0].href}>{SITE.author}</a> 维护。
+      </p>
+      <p>{SITE.bio}</p>
+
+      <h2>这个站点</h2>
+      <ul>
+        <li>用 <a href="https://astro.build">Astro</a> + Tailwind 搭建，部署在 Cloudflare Pages</li>
+        <li>源码在 <a href="https://github.com/MarchPhantasia/blog">GitHub</a>，欢迎 issue 与 PR</li>
+        <li>内容以中文为主，技术相关的术语偶尔夹英文</li>
+      </ul>
+
+      <h2>能在这里找到什么</h2>
+      <ul>
+        <li><strong>技术笔记</strong>：正在做的项目、反复权衡的决定、踩过的坑</li>
+        <li><strong>工具札记</strong>：编辑器、命令行、开发流程里的日常工具</li>
+        <li><strong>生活切片</strong>：长途旅行、深夜散步、阅读与观看</li>
+      </ul>
+
+      <h2>联系方式</h2>
+      <ul>
+        <li>GitHub：<a href="https://github.com/MarchPhantasia">@MarchPhantasia</a></li>
+        <li>Email：<a href="mailto:hello@example.com">hello@example.com</a></li>
+        <li>RSS：<a href="/rss.xml">订阅</a></li>
+      </ul>
+
+      <hr />
+
+      <p><em>最后更新于 2026 年 4 月。</em></p>
+    </Prose>
+  </div>
+</BaseLayout>

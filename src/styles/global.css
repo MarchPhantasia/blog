@@ -1,0 +1,159 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-serif: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', 'STSong', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang SC', 'HarmonyOS Sans', 'Microsoft YaHei', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --color-paper: #fafaf7;
+  --color-paper-raised: #f5f4ef;
+  --color-ink-50: #f5f4ef;
+  --color-ink-100: #e7e5e0;
+  --color-ink-200: #d6d3cc;
+  --color-ink-300: #a8a29a;
+  --color-ink-400: #78716c;
+  --color-ink-500: #57534e;
+  --color-ink-600: #44403c;
+  --color-ink-700: #292524;
+  --color-ink-800: #1c1917;
+  --color-ink-900: #0f0e0d;
+
+  --color-accent-400: #c88a5c;
+  --color-accent-500: #a86b3d;
+  --color-accent-600: #8b5a2b;
+  --color-accent-700: #6e4721;
+}
+
+:root {
+  --bg: var(--color-paper);
+  --bg-raised: var(--color-paper-raised);
+  --fg: var(--color-ink-800);
+  --fg-muted: var(--color-ink-500);
+  --border: var(--color-ink-100);
+  --accent: var(--color-accent-600);
+  color-scheme: light;
+}
+
+.dark {
+  --bg: #12110f;
+  --bg-raised: #1a1917;
+  --fg: #ece9e2;
+  --fg-muted: #a39e95;
+  --border: #2a2826;
+  --accent: var(--color-accent-400);
+  color-scheme: dark;
+}
+
+html {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-feature-settings: 'ss01', 'cv11';
+  line-height: 1.6;
+}
+
+a { color: inherit; }
+a:hover { color: var(--accent); transition: color 120ms ease; }
+
+::selection { background: var(--color-accent-600); color: #fff; }
+.dark ::selection { background: var(--color-accent-400); color: #12110f; }
+
+hr { border-color: var(--border); }
+
+/* Prose 覆写 */
+.prose {
+  --tw-prose-body: var(--fg);
+  --tw-prose-headings: var(--fg);
+  --tw-prose-lead: var(--fg-muted);
+  --tw-prose-links: var(--accent);
+  --tw-prose-bold: var(--fg);
+  --tw-prose-counters: var(--fg-muted);
+  --tw-prose-bullets: var(--fg-muted);
+  --tw-prose-hr: var(--border);
+  --tw-prose-quotes: var(--fg);
+  --tw-prose-quote-borders: var(--accent);
+  --tw-prose-captions: var(--fg-muted);
+  --tw-prose-kbd: var(--fg);
+  --tw-prose-kbd-shadows: 23 23 23;
+  --tw-prose-code: var(--fg);
+  --tw-prose-pre-code: #e6e6e6;
+  --tw-prose-pre-bg: #1c1917;
+  --tw-prose-th-borders: var(--border);
+  --tw-prose-td-borders: var(--border);
+  font-family: var(--font-sans);
+  max-width: none;
+}
+
+.prose :where(h1, h2, h3, h4) {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.prose :where(h2) {
+  margin-top: 2.2em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--border);
+}
+
+.prose :where(p, li) { line-height: 1.78; }
+
+.prose :where(a) {
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  transition: color 120ms ease, border-color 120ms ease;
+}
+.prose :where(a:hover) { color: var(--accent); }
+
+.prose :where(blockquote) {
+  font-style: normal;
+  border-left-width: 2px;
+  padding-left: 1.2em;
+  color: var(--fg-muted);
+  quotes: none;
+}
+.prose :where(blockquote p:first-of-type::before),
+.prose :where(blockquote p:last-of-type::after) { content: ''; }
+
+.prose :where(code):not(pre code) {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  padding: 0.12em 0.4em;
+  border-radius: 4px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  color: var(--accent);
+  font-weight: 500;
+}
+.prose :where(code)::before,
+.prose :where(code)::after { content: none; }
+
+.prose :where(pre) {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  line-height: 1.6;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1em 1.2em;
+  overflow-x: auto;
+}
+
+.prose :where(img) {
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+/* Shiki dual theme */
+.dark .astro-code,
+.dark .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+}
