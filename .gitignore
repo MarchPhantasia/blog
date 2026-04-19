@@ -27,5 +27,6 @@ pnpm-debug.log*
 .wrangler/
 .dev.vars
 
-# claude code local state
-.claude/
+# claude code local state (keep commands versioned, ignore everything else)
+.claude/*
+!.claude/commands/

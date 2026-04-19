@@ -55,6 +55,16 @@ draft: false
 
 Frontmatter schema is enforced by `src/content.config.ts`. `draft: true` hides the post in production builds.
 
+### 从外部文章导入（深度重写）
+
+在 Claude Code 里输入：
+
+```
+/import-article https://some-article-url
+```
+
+会按"抓取 → 列规划等你点头 → 深度重写 → 写入 draft → 你 review → 发布"流程产出一篇中文博文。命令定义在 `.claude/commands/import-article.md`，可以按需改写其中的风格指引。
+
 ## Project layout
 
 ```
