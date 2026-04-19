@@ -42,23 +42,26 @@ const { tag, posts } = Astro.props;
         posts.map((post) => {
           const rt = readingTime(post.body ?? '');
           return (
-            <li class="group py-4">
-              <a href={`/posts/${post.id}`} class="block">
-                <PostMeta
-                  pubDate={post.data.pubDate}
-                  readingTime={rt.label}
-                  tags={post.data.tags}
-                  compact
-                />
-                <h3 class="mt-1.5 font-serif text-lg md:text-xl font-medium leading-snug text-[var(--fg)] group-hover:text-[var(--accent)] transition-colors">
+            <li class="group relative py-4">
+              <PostMeta
+                pubDate={post.data.pubDate}
+                readingTime={rt.label}
+                tags={post.data.tags}
+                compact
+              />
+              <h3 class="mt-1.5 font-serif text-lg md:text-xl font-medium leading-snug text-[var(--fg)] transition-colors">
+                <a
+                  href={`/posts/${post.id}`}
+                  class="before:absolute before:inset-0 before:content-[''] group-hover:text-[var(--accent)]"
+                >
                   {post.data.title}
-                </h3>
-                {post.data.description && (
-                  <p class="mt-1.5 text-sm text-[var(--fg-muted)] line-clamp-1">
-                    {post.data.description}
-                  </p>
-                )}
-              </a>
+                </a>
+              </h3>
+              {post.data.description && (
+                <p class="mt-1.5 text-sm text-[var(--fg-muted)] line-clamp-1">
+                  {post.data.description}
+                </p>
+              )}
             </li>
           );
         })

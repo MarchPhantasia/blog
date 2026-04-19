@@ -24,7 +24,12 @@ const { pubDate, readingTime, tags = [], compact = false } = Astro.props;
       <span class="opacity-60">·</span>
       <span class="flex flex-wrap gap-1.5 font-mono">
         {tags.map((t) => (
-          <a href={`/tags/${t}`} class="hover:text-[var(--accent)] transition-colors">#{t}</a>
+          <a
+            href={`/tags/${t}`}
+            class="relative z-10 hover:text-[var(--accent)] transition-colors"
+          >
+            #{t}
+          </a>
         ))}
       </span>
     </Fragment>
